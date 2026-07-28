@@ -7,11 +7,6 @@ signal sector_changed(sector_id: String)
 signal player_credits_changed(amount: int)
 signal notification(message: String, type: String)
 
-var universe: UniverseManager
-var economy: EconomyManager
-var faction_mgr: FactionManager
-var time_mgr: TimeManager
-
 var player_ship: PlayerShip = null
 var player_faction_id: String = "player"
 var player_credits: int = 50000
@@ -24,16 +19,6 @@ var is_loaded: bool = false
 var notification_history: Array = []
 
 func _ready():
-	universe = UniverseManager.new()
-	economy = EconomyManager.new()
-	faction_mgr = FactionManager.new()
-	time_mgr = TimeManager.new()
-
-	add_child(universe)
-	add_child(economy)
-	add_child(faction_mgr)
-	add_child(time_mgr)
-
 	for fid in FactionData.get_all():
 		player_reputation[fid] = 0.0
 
@@ -43,17 +28,17 @@ func _ready():
 func _process(delta):
 	if not is_loaded: return
 	game_time += delta
-	economy.update_economy(delta * 10.0)
-	faction_mgr.update_factions(delta, universe, economy)
+	EconomyManager.update_economy(delta * 10.0)
+	FactionManager.update_factions(delta, UniverseManager, EconomyManager)
 
 func start_new_game():
 	var start_sector = "argon_prime"
 	current_sector_id = start_sector
-	universe.enter_sector(start_sector)
+	UniverseManager.enter_sector(start_sector)
 	_spawn_initial_stations()
 	is_loaded = true
 	game_loaded.emit()
-	add_notification("Game started in %s" % universe.get_display_name(start_sector), "info")
+	add_notification("Game started in %s" % UniverseManager.get_display_name(start_sector), "info")
 
 func _spawn_initial_stations():
 	for fid in FactionData.get_all():
@@ -65,11 +50,11 @@ func _spawn_initial_stations():
 					var types = ["solar_plant", "mine", "farm", "refinery", "factory"]
 					var stype = types[randi() % types.size()]
 					var sid = "%s_%s_%d" % [fid, stype, i]
-					economy.register_station(sid, {
+					EconomyManager.register_station(sid, {
 						"id": sid, "station_type": stype,
 						"faction": fid, "sector": sector,
 						"production_speed": 1.0 + randf() * 0.5,
-						"position": universe.find_safe_position_in_sector(sector)
+						"position": UniverseManager.find_safe_position_in_sector(sector)
 					})
 
 func change_credits(amount: int):
@@ -122,10 +107,10 @@ func load_game(slot: int = 0) -> bool:
 	return true
 
 func travel_to_sector(sector_id: String):
-	if universe.get_sector(sector_id).is_empty():
+	if UniverseManager.get_sector(sector_id).is_empty():
 		add_notification("Sector %s not found!" % sector_id, "error")
 		return
 	current_sector_id = sector_id
-	universe.enter_sector(sector_id)
+	UniverseManager.enter_sector(sector_id)
 	sector_changed.emit(sector_id)
-	add_notification("Entering %s" % universe.get_display_name(sector_id), "info")
+	add_notification("Entering %s" % UniverseManager.get_display_name(sector_id), "info")

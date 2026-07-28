@@ -14,15 +14,6 @@ var completed_missions: Array = []
 var available_missions: Array = []
 var mission_counter: int = 0
 
-var universe: UniverseManager
-var economy: EconomyManager
-var faction_mgr: FactionManager
-
-func _ready():
-	universe = get_tree().root.find_child("UniverseManager", true, false)
-	economy = get_tree().root.find_child("EconomyManager", true, false)
-	faction_mgr = get_tree().root.find_child("FactionManager", true, false)
-
 func generate_missions(count: int = 3):
 	available_missions.clear()
 	for i in range(count):
@@ -43,7 +34,7 @@ func _create_random_mission() -> Dictionary:
 	if faction_ids.is_empty(): return {}
 	var giver = faction_ids[randi() % faction_ids.size()]
 
-	var sectors = universe.get_all_sectors().keys()
+	var sectors = UniverseManager.get_all_sectors().keys()
 	if sectors.is_empty(): return {}
 	var target_sector = sectors[randi() % sectors.size()]
 	var giver_sector = sectors[randi() % sectors.size()]
@@ -62,15 +53,15 @@ func _create_random_mission() -> Dictionary:
 			var res_list = ResourceData.get_all().keys()
 			var resource = res_list[randi() % res_list.size()]
 			var amount = randi_range(10, 100) * (difficulty + 1)
-			details = "Deliver %d %s to %s" % [amount, ResourceData.get(resource).get("name", resource), universe.get_display_name(target_sector)]
+			details = "Deliver %d %s to %s" % [amount, ResourceData.get(resource).get("name", resource), UniverseManager.get_display_name(target_sector)]
 		MissionType.KILL:
 			var count = randi_range(2, 10) * (difficulty + 1)
-			details = "Destroy %d ships in %s" % [count, universe.get_display_name(target_sector)]
+			details = "Destroy %d ships in %s" % [count, UniverseManager.get_display_name(target_sector)]
 		MissionType.PATROL:
 			var time = randi_range(60, 300) * (difficulty + 1)
-			details = "Patrol %s for %d seconds" % [universe.get_display_name(target_sector), time]
+			details = "Patrol %s for %d seconds" % [UniverseManager.get_display_name(target_sector), time]
 		MissionType.EXPLORE:
-			details = "Explore %s and report" % universe.get_display_name(target_sector)
+			details = "Explore %s and report" % UniverseManager.get_display_name(target_sector)
 
 	return {
 		"id": mid,

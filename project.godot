@@ -5,9 +5,9 @@ run/main_scene="res://scenes/game.tscn"
 config/features=PackedStringArray("4.3", "forward_plus")
 
 [rendering]
-environment/defaults/default_environment="res://assets/environments/default_env.tres"
+environment/defaults/default_environment=""
 renderer/rendering_method="forward_plus"
-anti_aliasing/quality/msaa_3d=4
+anti_aliasing/quality/msaa_3d=2
 anti_aliasing/quality/msaa_2d=2
 
 [display]
@@ -73,8 +73,8 @@ GameManager="*res://scripts/core/game_manager.gd"
 UniverseManager="*res://scripts/core/universe_manager.gd"
 EconomyManager="*res://scripts/economy/economy_manager.gd"
 FactionManager="*res://scripts/factions/faction_manager.gd"
-TimeManager
-MissionManager="*res://scripts/ui/mission_manager.gd"="*res://scripts/core/time_manager.gd"
+TimeManager="*res://scripts/core/time_manager.gd"
+MissionManager="*res://scripts/ui/mission_manager.gd"
 
 [physics]
 common/physics_ticks_per_second=120
