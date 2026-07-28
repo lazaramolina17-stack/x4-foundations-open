@@ -1,0 +1,60 @@
+[gd_scene load_steps=2 format=3 uid="uid://d4mk7vtc6kqy5"]
+
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_4cnhb"]
+
+[node name="HUD" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_4cnhb")
+
+[node name="HullBar" type="TextureProgressBar" parent="."]
+offset_left = 20.0; offset_top = 20.0; offset_right = 220.0; offset_bottom = 50.0
+show_percentage = false; fill_mode = 2
+tint_progress = Color(0, 1, 0, 1); tint_under = Color(0.2, 0.2, 0.2, 1)
+[node name="Label" type="Label" parent="HullBar"]
+anchors_preset = 8; anchor_left = 0.5; anchor_right = 0.5
+offset_left = -60.0; offset_right = 60.0; offset_top = 2.0; offset_bottom = 28.0
+text = "Hull: 100/100"
+
+[node name="ShieldBar" type="TextureProgressBar" parent="."]
+offset_left = 20.0; offset_top = 55.0; offset_right = 220.0; offset_bottom = 85.0
+show_percentage = false; fill_mode = 2
+tint_progress = Color(0, 0.5, 1, 1); tint_under = Color(0.2, 0.2, 0.2, 1)
+[node name="Label" type="Label" parent="ShieldBar"]
+anchors_preset = 8; anchor_left = 0.5; anchor_right = 0.5
+offset_left = -60.0; offset_right = 60.0; offset_top = 2.0; offset_bottom = 28.0
+text = "Shield: 100/100"
+
+[node name="EnergyBar" type="TextureProgressBar" parent="."]
+offset_left = 20.0; offset_top = 90.0; offset_right = 220.0; offset_bottom = 120.0
+show_percentage = false; fill_mode = 2
+tint_progress = Color(1, 1, 0, 1); tint_under = Color(0.2, 0.2, 0.2, 1)
+[node name="Label" type="Label" parent="EnergyBar"]
+anchors_preset = 8; anchor_left = 0.5; anchor_right = 0.5
+offset_left = -60.0; offset_right = 60.0; offset_top = 2.0; offset_bottom = 28.0
+text = "Energy: 100/100"
+
+[node name="ScoreLabel" type="Label" parent="."]
+anchors_preset = 1; anchor_top = 1.0; anchor_bottom = 1.0
+offset_left = 20.0; offset_top = -80.0; offset_right = 220.0; offset_bottom = -50.0
+text = "Score: 0"
+
+[node name="WaveLabel" type="Label" parent="."]
+anchors_preset = 2; anchor_left = 1.0; anchor_right = 1.0
+offset_left = -220.0; offset_top = 20.0; offset_right = -20.0; offset_bottom = 50.0
+text = "Wave 1"; horizontal_alignment = 2
+
+[node name="CreditsLabel" type="Label" parent="."]
+anchors_preset = 2; anchor_left = 1.0; anchor_right = 1.0
+offset_left = -220.0; offset_top = 55.0; offset_right = -20.0; offset_bottom = 85.0
+text = "Credits: 1000"; horizontal_alignment = 2
+
+[node name="LivesLabel" type="Label" parent="."]
+anchors_preset = 2; anchor_left = 1.0; anchor_right = 1.0
+offset_left = -220.0; offset_top = 90.0; offset_right = -20.0; offset_bottom = 120.0
+text = "Lives: 3"; horizontal_alignment = 2
+
+[node name="DamageOverlay" type="ColorRect" parent="."]
+anchors_preset = 15; anchor_right = 1.0; anchor_bottom = 1.0
+color = Color(1, 0, 0, 0); mouse_filter = 2

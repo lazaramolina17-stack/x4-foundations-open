@@ -1,0 +1,51 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Godot
+        run: |
+          wget -q https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux_headless.x86_64.zip
+          unzip -q Godot_v4.3-stable_linux_headless.x86_64.zip
+          chmod +x Godot_v4.3-stable_linux_headless.x86_64
+          sudo mv Godot_v4.3-stable_linux_headless.x86_64 /usr/local/bin/godot
+
+      - name: Setup Android SDK
+        run: |
+          sudo mkdir -p /opt/android-sdk
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -q commandlinetools-linux-*.zip -d /opt/android-sdk/
+          sudo mkdir -p /opt/android-sdk/latest
+          sudo mv /opt/android-sdk/cmdline-tools/* /opt/android-sdk/latest/ 2>/dev/null
+          sudo rmdir /opt/android-sdk/cmdline-tools 2>/dev/null
+          echo "ANDROID_HOME=/opt/android-sdk" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=/opt/android-sdk" >> $GITHUB_ENV
+          yes | /opt/android-sdk/latest/bin/sdkmanager --sdk_root=/opt/android-sdk 'platforms;android-34' 'build-tools;34.0.0' 'ndk;25.2.9519653' > /dev/null 2>&1
+
+      - name: Keystore
+        run: keytool -genkeypair -v -keystore android.keystore -alias android -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=X4Game, OU=Dev, O=SpaceGame, L=Unknown, ST=Unknown, C=XX"
+
+      - name: Build APK
+        run: |
+          mkdir -p build
+          godot --headless --export-debug "Android" build/game-debug.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: game-debug-apk
+          path: build/game-debug.apk

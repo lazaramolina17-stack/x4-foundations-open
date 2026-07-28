@@ -1,0 +1,73 @@
+[gd_scene load_steps=7 format=3 uid="uid://f9e4764d14b34042"]
+
+[ext_resource type="Script" path="res://scripts/enemy.gd" id="1"]
+
+[sub_resource type="BoxMesh" id="2"]
+size = Vector3(1, 0.4, 1.4)
+
+[sub_resource type="StandardMaterial3D" id="3"]
+albedo_color = Color(0.8,0.1,0.1, 1)
+metallic = 0.6
+roughness = 0.4
+emission = Color(0.8,0.1,0.1, 0.3)
+emission_enabled = true
+
+[sub_resource type="BoxMesh" id="4"]
+size = Vector3(1.4, 0.15, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="5"]
+albedo_color = Color(0.8,0.1,0.1, 0.8)
+metallic = 0.5
+roughness = 0.5
+
+[sub_resource type="SphereShape3D" id="6"]
+radius = 1.5
+
+[node name="Boss_Destroyer" type="CharacterBody3D"]
+script = ExtResource("1")
+collision_layer = 8
+collision_mask = 6
+enemy_type = "boss_destroyer"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("6")
+scale = Vector3(6,4,8)
+
+[node name="MeshRoot" type="Node3D" parent="."]
+groups = ["EnemyMesh"]
+scale = Vector3(6,4,8)
+
+[node name="Body" type="MeshInstance3D" parent="MeshRoot"]
+mesh = SubResource("2")
+material_override = SubResource("3")
+
+[node name="Wings" type="MeshInstance3D" parent="MeshRoot"]
+mesh = SubResource("4")
+material_override = SubResource("5")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Muzzle" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.5)
+
+[node name="HealthBar" type="Node3D" parent="."]
+visible = false
+
+[node name="ShieldBar" type="Node3D" parent="."]
+visible = false
+
+[node name="VisibilityNotifier" type="VisibleOnScreenNotifier3D" parent="."]
+
+[sub_resource type="BoxMesh" id="7"]
+size = Vector3(2, 1, 2)
+
+[sub_resource type="StandardMaterial3D" id="8"]
+albedo_color = Color(0.9, 0.15, 0.15, 1)
+metallic = 0.9
+roughness = 0.1
+emission = Color(0.9, 0.15, 0.15, 0.5)
+emission_enabled = true
+
+[node name="Turret" type="MeshInstance3D" parent="MeshRoot"]
+mesh = SubResource("7")
+material_override = SubResource("8")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0.5)
