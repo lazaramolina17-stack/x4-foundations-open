@@ -25,6 +25,14 @@ jobs:
           chmod +x Godot_v4.3-stable_linux_headless.x86_64
           sudo mv Godot_v4.3-stable_linux_headless.x86_64 /usr/local/bin/godot
 
+      - name: Install Godot export templates
+        run: |
+          wget -q https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz
+          mkdir -p /home/runner/.local/share/godot/export_templates/4.3.stable
+          unzip -q Godot_v4.3-stable_export_templates.tpz -d /home/runner/.local/share/godot/export_templates/4.3.stable
+          mv /home/runner/.local/share/godot/export_templates/4.3.stable/templates/* /home/runner/.local/share/godot/export_templates/4.3.stable/
+          rm -rf /home/runner/.local/share/godot/export_templates/4.3.stable/templates
+
       - name: Setup Android SDK
         run: |
           sudo mkdir -p /opt/android-sdk
