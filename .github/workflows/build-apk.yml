@@ -18,7 +18,7 @@ jobs:
 
       - name: Install Godot
         run: |
-          wget -nv https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip
+          wget -nv https://downloads.tuxfamily.org/godotengine/4.3/Godot_v4.3-stable_linux.x86_64.zip
           unzip -q Godot_v4.3-stable_linux.x86_64.zip
           chmod +x Godot_v4.3-stable_linux.x86_64
           sudo mv Godot_v4.3-stable_linux.x86_64 /usr/local/bin/godot
@@ -42,18 +42,15 @@ jobs:
 
       - name: Install Godot export templates
         run: |
-          VERSION=$(godot --version 2>&1 | grep -oP '[\d.]+' | head -1)
-          echo "Godot version: $VERSION"
-          wget -nv "https://github.com/godotengine/godot/releases/download/${VERSION}-stable/Godot_v${VERSION}-stable_export_templates.tpz"
-          mkdir -p ~/.local/share/godot/export_templates/${VERSION}.stable
-          unzip -q "Godot_v${VERSION}-stable_export_templates.tpz" -d ~/.local/share/godot/export_templates/${VERSION}.stable
-          ls -la ~/.local/share/godot/export_templates/${VERSION}.stable/
-          # The tpz contains a templates/ subdir
-          if [ -d ~/.local/share/godot/export_templates/${VERSION}.stable/templates ]; then
-            mv ~/.local/share/godot/export_templates/${VERSION}.stable/templates/* ~/.local/share/godot/export_templates/${VERSION}.stable/
-            rm -rf ~/.local/share/godot/export_templates/${VERSION}.stable/templates
+          wget -nv https://downloads.tuxfamily.org/godotengine/4.3/Godot_v4.3-stable_export_templates.tpz
+          mkdir -p ~/.local/share/godot/export_templates/4.3.stable
+          unzip -q Godot_v4.3-stable_export_templates.tpz -d ~/.local/share/godot/export_templates/4.3.stable
+          ls -la ~/.local/share/godot/export_templates/4.3.stable/
+          if [ -d ~/.local/share/godot/export_templates/4.3.stable/templates ]; then
+            mv ~/.local/share/godot/export_templates/4.3.stable/templates/* ~/.local/share/godot/export_templates/4.3.stable/
+            rm -rf ~/.local/share/godot/export_templates/4.3.stable/templates
           fi
-          ls ~/.local/share/godot/export_templates/${VERSION}.stable/ | head -10
+          ls ~/.local/share/godot/export_templates/4.3.stable/ | head -10
           echo "Templates installed"
 
       - name: Generate keystore
