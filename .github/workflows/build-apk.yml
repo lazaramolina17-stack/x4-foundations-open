@@ -37,7 +37,7 @@ jobs:
           sudo rmdir /opt/android-sdk/cmdline-tools 2>/dev/null
           echo "ANDROID_HOME=/opt/android-sdk" >> $GITHUB_ENV
           echo "ANDROID_SDK_ROOT=/opt/android-sdk" >> $GITHUB_ENV
-          yes | /opt/android-sdk/latest/bin/sdkmanager --sdk_root=/opt/android-sdk 'platforms;android-34' 'build-tools;34.0.0' 'ndk;25.2.9519653' 2>&1 | tail -5
+          yes | /opt/android-sdk/latest/bin/sdkmanager --sdk_root=/opt/android-sdk 'platforms;android-34' 'build-tools;34.0.0' 'platform-tools' 'ndk;25.2.9519653' 2>&1 | tail -10
           echo "SDK installed"
 
       - name: Install Godot export templates
@@ -61,10 +61,11 @@ jobs:
           mkdir -p build
           # First import to initialize .godot folder
           godot --headless --path . --import 2>&1 || true
-          # List available export presets
           ls -la export_presets.cfg
           head -10 export_presets.cfg
-          # Try export
+          # Export
+          export ANDROID_HOME=/opt/android-sdk
+          export ANDROID_SDK_ROOT=/opt/android-sdk
           godot --headless --path . --export-debug "Android" build/game-debug.apk 2>&1 || true
           ls -lh build/ 2>&1 || echo "No build output"
 

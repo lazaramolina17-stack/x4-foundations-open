@@ -6,7 +6,7 @@ signal menu_closed
 
 var current_station_id: String = ""
 var current_ship: ShipBase = null
-var economy: EconomyManager
+var economy
 var offers: Dictionary = {}
 
 func _ready():

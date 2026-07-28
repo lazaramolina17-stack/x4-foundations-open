@@ -3,7 +3,7 @@ extends Node
 var sector_scene: SectorScene = null
 var map_view: MapView
 var trade_menu: TradeMenu
-var mission_mgr: MissionManager
+var mission_mgr
 
 func _ready():
 	map_view = $MapView

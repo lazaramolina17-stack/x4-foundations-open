@@ -14,8 +14,8 @@ var docked_ships: Array = []
 var max_dock_slots: int = 5
 var is_hostile: bool = false
 
-var economy_manager: EconomyManager
-var faction_manager: FactionManager
+var economy_manager
+var faction_manager
 
 func _ready():
 	add_to_group("stations")

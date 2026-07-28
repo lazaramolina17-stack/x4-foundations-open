@@ -1,5 +1,4 @@
 extends Node
-class_name EconomyManager
 
 signal price_changed(resource_id: String, station_id: String, price: float)
 signal station_produced(station_id: String, resource_id: String, amount: int)

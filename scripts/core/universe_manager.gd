@@ -1,5 +1,4 @@
 extends Node
-class_name UniverseManager
 
 signal sector_entered(sector_id: String)
 signal sector_left(sector_id: String)

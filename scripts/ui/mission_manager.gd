@@ -1,5 +1,4 @@
 extends Node
-class_name MissionManager
 
 signal mission_accepted(mission_id: String)
 signal mission_completed(mission_id: String)

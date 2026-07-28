@@ -10,9 +10,9 @@ var ships_node: Node3D
 var asteroids_node: Node3D
 var stars_node: Node3D
 
-var universe: UniverseManager
-var economy: EconomyManager
-var faction_mgr: FactionManager
+var universe
+var economy
+var faction_mgr
 
 var star_count: int = 2000
 var asteroid_count: int = 200

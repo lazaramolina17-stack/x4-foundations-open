@@ -1,5 +1,4 @@
 extends Node
-class_name TimeManager
 
 signal time_tick(day: int, hour: int, minute: int)
 signal day_passed(day: int)

@@ -10,8 +10,8 @@ var selected_sector: String = ""
 var known_sectors: Array = []
 var player_sector: String = ""
 
-var universe: UniverseManager
-var faction_mgr: FactionManager
+var universe
+var faction_mgr
 
 func _ready():
 	universe = get_tree().root.find_child("UniverseManager", true, false)

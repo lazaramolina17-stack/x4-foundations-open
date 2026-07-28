@@ -1,5 +1,4 @@
 extends Node
-class_name FactionManager
 
 signal relation_changed(faction_a: String, faction_b: String, new_standing: float)
 signal war_declared(attacker: String, defender: String)
@@ -87,7 +86,7 @@ func get_relation_weighted(faction_id: String) -> Dictionary:
 		result[other] = rel
 	return result
 
-func update_factions(delta: float, universe: UniverseManager, economy: EconomyManager):
+func update_factions(delta: float, universe, economy):
 	for fid in factions:
 		var f = factions[fid]
 		if not f["active"]: continue

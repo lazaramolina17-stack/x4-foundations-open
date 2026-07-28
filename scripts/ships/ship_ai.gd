@@ -19,9 +19,9 @@ var aggro_range: float = 3000.0
 var update_interval: float = 2.0
 var update_timer: float = 0.0
 
-var universe: UniverseManager
-var economy: EconomyManager
-var faction_mgr: FactionManager
+var universe
+var economy
+var faction_mgr
 
 func _ready():
 	universe = get_tree().root.find_child("UniverseManager", true, false)

@@ -1,5 +1,4 @@
 extends Node
-class_name GameManager
 
 signal game_loaded
 signal game_saved
