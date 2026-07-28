@@ -18,13 +18,16 @@ jobs:
 
       - name: Install Godot
         run: |
-          wget -nv https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux_headless.x86_64.zip
-          unzip -q Godot_v4.3-stable_linux_headless.x86_64.zip
-          chmod +x Godot_v4.3-stable_linux_headless.x86_64
-          sudo mv Godot_v4.3-stable_linux_headless.x86_64 /usr/local/bin/godot
+          wget -nv https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip
+          unzip -q Godot_v4.3-stable_linux.x86_64.zip
+          chmod +x Godot_v4.3-stable_linux.x86_64
+          sudo mv Godot_v4.3-stable_linux.x86_64 /usr/local/bin/godot
           godot --version
 
       - name: Install Android SDK
+        env:
+          ANDROID_HOME: /opt/android-sdk
+          ANDROID_SDK_ROOT: /opt/android-sdk
         run: |
           sudo mkdir -p /opt/android-sdk
           wget -nv https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
