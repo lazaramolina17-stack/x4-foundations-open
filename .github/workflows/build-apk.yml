@@ -3,8 +3,6 @@ name: Build Android APK
 on:
   push:
     branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
@@ -18,42 +16,56 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Godot
+      - name: Install Godot
         run: |
-          wget -q https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux_headless.x86_64.zip
+          wget -nv https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux_headless.x86_64.zip
           unzip -q Godot_v4.3-stable_linux_headless.x86_64.zip
           chmod +x Godot_v4.3-stable_linux_headless.x86_64
           sudo mv Godot_v4.3-stable_linux_headless.x86_64 /usr/local/bin/godot
+          godot --version
 
-      - name: Install Godot export templates
-        run: |
-          wget -q https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz
-          mkdir -p /home/runner/.local/share/godot/export_templates/4.3.stable
-          unzip -q Godot_v4.3-stable_export_templates.tpz -d /home/runner/.local/share/godot/export_templates/4.3.stable
-          mv /home/runner/.local/share/godot/export_templates/4.3.stable/templates/* /home/runner/.local/share/godot/export_templates/4.3.stable/
-          rm -rf /home/runner/.local/share/godot/export_templates/4.3.stable/templates
-
-      - name: Setup Android SDK
+      - name: Install Android SDK
         run: |
           sudo mkdir -p /opt/android-sdk
-          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          wget -nv https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
           unzip -q commandlinetools-linux-*.zip -d /opt/android-sdk/
           sudo mkdir -p /opt/android-sdk/latest
           sudo mv /opt/android-sdk/cmdline-tools/* /opt/android-sdk/latest/ 2>/dev/null
           sudo rmdir /opt/android-sdk/cmdline-tools 2>/dev/null
           echo "ANDROID_HOME=/opt/android-sdk" >> $GITHUB_ENV
           echo "ANDROID_SDK_ROOT=/opt/android-sdk" >> $GITHUB_ENV
-          yes | /opt/android-sdk/latest/bin/sdkmanager --sdk_root=/opt/android-sdk 'platforms;android-34' 'build-tools;34.0.0' 'ndk;25.2.9519653' > /dev/null 2>&1
+          yes | /opt/android-sdk/latest/bin/sdkmanager --sdk_root=/opt/android-sdk 'platforms;android-34' 'build-tools;34.0.0' 'ndk;25.2.9519653' 2>&1 | tail -5
+          echo "SDK installed"
 
-      - name: Keystore
-        run: keytool -genkeypair -v -keystore android.keystore -alias android -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=X4Game, OU=Dev, O=SpaceGame, L=Unknown, ST=Unknown, C=XX"
+      - name: Install Godot export templates
+        run: |
+          VERSION=$(godot --version 2>&1 | grep -oP '[\d.]+' | head -1)
+          echo "Godot version: $VERSION"
+          wget -nv "https://github.com/godotengine/godot/releases/download/${VERSION}-stable/Godot_v${VERSION}-stable_export_templates.tpz"
+          mkdir -p ~/.local/share/godot/export_templates/${VERSION}.stable
+          unzip -q "Godot_v${VERSION}-stable_export_templates.tpz" -d ~/.local/share/godot/export_templates/${VERSION}.stable
+          ls -la ~/.local/share/godot/export_templates/${VERSION}.stable/
+          # The tpz contains a templates/ subdir
+          if [ -d ~/.local/share/godot/export_templates/${VERSION}.stable/templates ]; then
+            mv ~/.local/share/godot/export_templates/${VERSION}.stable/templates/* ~/.local/share/godot/export_templates/${VERSION}.stable/
+            rm -rf ~/.local/share/godot/export_templates/${VERSION}.stable/templates
+          fi
+          ls ~/.local/share/godot/export_templates/${VERSION}.stable/ | head -10
+          echo "Templates installed"
+
+      - name: Generate keystore
+        run: |
+          keytool -genkeypair -v -keystore android.keystore -alias android -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=X4, OU=Dev, O=Game, L=Unknown, ST=Unknown, C=XX"
+          ls -la android.keystore
 
       - name: Build APK
         run: |
           mkdir -p build
-          godot --headless --export-debug "Android" build/game-debug.apk
+          godot --headless --verbose --export-debug "Android" build/game-debug.apk 2>&1 | tail -30
+          ls -lh build/
 
       - uses: actions/upload-artifact@v4
         with:
           name: game-debug-apk
           path: build/game-debug.apk
+          if-no-files-found: error
