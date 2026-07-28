@@ -59,8 +59,14 @@ jobs:
       - name: Build APK
         run: |
           mkdir -p build
-          godot --headless --verbose --export-debug "Android" build/game-debug.apk 2>&1 | tail -30
-          ls -lh build/
+          # First import to initialize .godot folder
+          godot --headless --path . --import 2>&1 || true
+          # List available export presets
+          ls -la export_presets.cfg
+          head -10 export_presets.cfg
+          # Try export
+          godot --headless --path . --export-debug "Android" build/game-debug.apk 2>&1 || true
+          ls -lh build/ 2>&1 || echo "No build output"
 
       - uses: actions/upload-artifact@v4
         with:
